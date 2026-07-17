@@ -1,12 +1,12 @@
-# bazzite-amd-hdmi-kde
+# bazzite-amd-hdmi-kde-44
 
-A carbon copy of the bazzite-deck-kde image, with the stock Bazzite
+A carbon copy of the bazzite-deck-kde-testing image, with the stock Bazzite
 kernel replaced by a custom-built kernel carrying AMD's official
 HDMI 2.1 FRL V6 series from the amd-gfx mailing list.
 
-This has VRR support but only tested on 9070 xt on a Sony Bravia 8 II.
+This has VRR support but only tested on 9070 xt on a LG C1.
 
-The kernel is built from my fork of agd5f/amd-staging-drm-next here: https://gitlab.freedesktop.org/dyllan500/linux
+The kernel is built from Dylan500's fork of agd5f/amd-staging-drm-next here: https://gitlab.freedesktop.org/dyllan500/linux
 
 Upstream source of the FRL patches: https://lore.kernel.org/amd-gfx/20260520202929.555119-1-harry.wentland@amd.com/T/#t
 
@@ -18,36 +18,6 @@ This fork also contains the work down by Lawstorant https://github.com/Lawstoran
 
 Once Harry's series merges to amd-staging-drm-next / drm-next, this image becomes obsolete and you should rebase
 onto a stock Bazzite kernel that includes it.
-
-## Building locally
-
-The Containerfile pulls `ghcr.io/ublue-os/bazzite-deck:stable` as the
-base, removes the stock kernel packages, and installs custom-built
-kernel RPMs from `build_files/`.
-
-To build a fresh kernel from my fork:
-
-```bash
-git clone https://gitlab.freedesktop.org/dyllan500/linux.git -b harry-frl-v1
-cd linux
-cp /boot/config-$(uname -r) .config
-sed -i 's|^CONFIG_SYSTEM_TRUSTED_KEYS=.*|CONFIG_SYSTEM_TRUSTED_KEYS=""|' .config
-sed -i 's|^CONFIG_SYSTEM_REVOCATION_KEYS=.*|CONFIG_SYSTEM_REVOCATION_KEYS=""|' .config
-yes "" | make olddefconfig
-make -j$(nproc) binrpm-pkg
-```
-
-Then drop the resulting RPMs from ~/rpmbuild/RPMS/x86_64/ (or
-./rpmbuild/RPMS/x86_64/ depending on your kernel makefile) into
-build_files/. The main kernel-*.rpm is over GitHub's 100 MB file
-size limit, so split it:
-
-```bash
-split -b 50M kernel-X.Y.Z+.x86_64.rpm KF
-```
-
-Then `just` build to produce the OCI image.
-
 
 Keeping the rest of the readme from the custom image repo for reference: https://github.com/ublue-os/image-template
 
