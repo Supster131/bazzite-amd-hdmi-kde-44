@@ -5,6 +5,9 @@ COPY build_files /
 # Base Image
 FROM ghcr.io/ublue-os/bazzite-deck:testing
 
+# Download the missing Fedora 44 Terra-Mesa GPG key
+RUN curl -sL -o /etc/pki/rpm-gpg/RPM-GPG-KEY-terra44-mesa https://terra.fyralabs.com/terra44-mesa.gpg
+
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
 # FROM ghcr.io/ublue-os/bluefin-nvidia:stable
